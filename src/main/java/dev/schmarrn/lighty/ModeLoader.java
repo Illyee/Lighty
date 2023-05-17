@@ -3,6 +3,9 @@ package dev.schmarrn.lighty;
 import dev.schmarrn.lighty.api.LightyMode;
 import dev.schmarrn.lighty.config.Config;
 import dev.schmarrn.lighty.event.Compute;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,6 +43,9 @@ public class ModeLoader {
 
     public static void toggle() {
         enabled = !enabled;
+        if (Minecraft.getInstance().player != null) {
+            Minecraft.getInstance().player.sendSystemMessage(Component.literal(enabled ? "Lighty: Overlay §a§lON" : "Lighty: Overlay §c§lOFF"));
+        }
     }
 
     public static void put(ResourceLocation id, LightyMode mode) {

@@ -9,8 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class Blocks {
-    public static final Block GREEN_OVERLAY = registerOverlayBlock("green_overlay", LightyColors.getSafe());
-    public static final Block ORANGE_OVERLAY = registerOverlayBlock("orange_overlay", LightyColors.getWarning());
+    public static final Block GREEN_OVERLAY = registerOverlayBlock("green_overlay", LightyColors.getWarning());
     public static final Block RED_OVERLAY = registerOverlayBlock("red_overlay", LightyColors.getDanger());
 
     private static Block registerOverlayBlock(String name, int color) {

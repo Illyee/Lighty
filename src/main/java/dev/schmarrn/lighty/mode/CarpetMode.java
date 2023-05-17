@@ -73,37 +73,36 @@ public class CarpetMode extends LightyMode {
         int blockLightLevel = world.getBrightness(LightLayer.BLOCK, posUp);
         int skyLightLevel = world.getBrightness(LightLayer.SKY, posUp);
 
-        BlockState overlayState = Blocks.GREEN_OVERLAY.defaultBlockState();
+        BlockState overlayState;
         if (blockLightLevel <= Config.getBlockThreshold()) {
+            overlayState = Blocks.GREEN_OVERLAY.defaultBlockState();
+
             if (skyLightLevel <= Config.getSkyThreshold()) {
                 overlayState = Blocks.RED_OVERLAY.defaultBlockState();
-            } else {
-                overlayState = Blocks.ORANGE_OVERLAY.defaultBlockState();
             }
-        }
+            double offset = 0;
+            if (upBlock instanceof SnowLayerBlock) { // snow layers
+                int layer = world.getBlockState(posUp).getValue(SnowLayerBlock.LAYERS);
+                // One layer of snow is two pixels high, with one pixel being 1/16
+                offset = 2f / 16f * layer;
+            } else if (upBlock instanceof CarpetBlock) {
+                // Carpet is just one pixel high
+                offset = 1f / 16f;
+            }
 
-        double offset = 0;
-        if (upBlock instanceof SnowLayerBlock) { // snow layers
-            int layer = world.getBlockState(posUp).getValue(SnowLayerBlock.LAYERS);
-            // One layer of snow is two pixels high, with one pixel being 1/16
-            offset = 2f / 16f * layer;
-        } else if (upBlock instanceof CarpetBlock) {
-            // Carpet is just one pixel high
-            offset = 1f / 16f;
+            matrixStack.pushPose();
+            matrixStack.translate(posUp.getX(), (posUp.getY()) + offset, posUp.getZ());
+            Minecraft.getInstance().getBlockRenderer().renderBatched(
+                    overlayState,
+                    posUp,
+                    world,
+                    matrixStack,
+                    builder,
+                    false,
+                    random
+            );
+            matrixStack.popPose();
         }
-
-        matrixStack.pushPose();
-        matrixStack.translate(posUp.getX(), (posUp.getY()) + offset, posUp.getZ());
-        Minecraft.getInstance().getBlockRenderer().renderBatched(
-                overlayState,
-                posUp,
-                world,
-                matrixStack,
-                builder,
-                false,
-                random
-        );
-        matrixStack.popPose();
     }
 
     @Override
@@ -126,7 +125,7 @@ public class CarpetMode extends LightyMode {
             } else {
                 return 0xFFFFFF;
             }
-        }, Blocks.GREEN_OVERLAY, Blocks.RED_OVERLAY, Blocks.ORANGE_OVERLAY);
+        }, Blocks.GREEN_OVERLAY, Blocks.RED_OVERLAY);
 
         ModeManager.registerMode(new ResourceLocation(Lighty.MOD_ID, "carpet_mode"), new CarpetMode());
     }

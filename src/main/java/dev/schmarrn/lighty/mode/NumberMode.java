@@ -50,12 +50,12 @@ public class NumberMode extends LightyMode {
         int blockLightLevel = world.getBrightness(LightLayer.BLOCK, posUp);
         int skyLightLevel = world.getBrightness(LightLayer.SKY, posUp);
 
-        int color = LightyColors.getSafe();
+        int color;
         if (blockLightLevel <= Config.getBlockThreshold()) {
+            color = LightyColors.getWarning();
+
             if (skyLightLevel <= Config.getSkyThreshold()) {
                 color = LightyColors.getDanger();
-            } else {
-                color = LightyColors.getWarning();
             }
         }
 

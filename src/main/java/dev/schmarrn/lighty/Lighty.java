@@ -24,6 +24,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +44,6 @@ public class Lighty implements ClientModInitializer {
         KeyBind.init();
         ClientTickEvents.END_CLIENT_TICK.register(Compute::computeCache);
         WorldRenderEvents.AFTER_TRANSLUCENT.register(Compute::render);
-        ClientChunkEvents.CHUNK_LOAD.register((world, chunk) -> {
-            Compute.addChunk(world, chunk.getPos());
-        });
-        ClientChunkEvents.CHUNK_UNLOAD.register((world, chunk) -> {
-            Compute.removeChunk(world, chunk.getPos());
-        });
 
         CarpetMode.init();
         // NumberMode.init();
